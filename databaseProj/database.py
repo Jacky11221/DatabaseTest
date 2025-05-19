@@ -31,6 +31,10 @@ def get_teacher_schedule(teacher_id):
     return execute_statement(connect_to_sql(), call)
 
 
+def get_student_grades(student_id):
+    call = (" CALL get_student_grades(" + student_id + ");")
+    return execute_statement(connect_to_sql(), call)
+
 def get_schedule():
     print("TEACHER OR STUDENT?")
     print("1. Teacher")
@@ -41,8 +45,7 @@ def get_schedule():
         teacher_id = input("ENTER TEACHER_ID NOW (number only): ")
         print_schedule(get_teacher_schedule(teacher_id), role)
     elif role == 2:
-        student_id = input("ENTER STUDENT_ID NOW (number only): ")
-        print_schedule(get_student_schedule(student_id), role)
+        get_student_options(role)
 
 
 def print_schedule(schedule, role):
@@ -58,6 +61,21 @@ def print_schedule(schedule, role):
             print("Course: " + desc[1])
             print("Room: " + desc[2])
             print("Teacher: " + desc[3] + "\n")
+
+
+def get_student_options(role):
+    student_id = input("ENTER STUDENT_ID NOW (number only): ")
+    print("1. SCHEUDLE. 2. GRADES")
+    option = input("OPTIONS:")
+    if option == 1:
+        print_schedule(get_student_schedule(student_id), role)
+    # elif option == 2:
+    #
+
+
+def calculate_class_grade():
+    print("hi")
+    #do stuff
 
 
 get_schedule()
