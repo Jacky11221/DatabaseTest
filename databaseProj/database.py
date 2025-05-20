@@ -1,5 +1,5 @@
 import mysql.connector
-
+import statistics
 
 def connect_to_sql():
     return mysql.connector.connect(user='jackyl112',
@@ -35,18 +35,6 @@ def get_student_grades(student_id):
     call = (" CALL get_student_grades(" + student_id + ");")
     return execute_statement(connect_to_sql(), call)
 
-def get_schedule():
-    print("TEACHER OR STUDENT?")
-    print("1. Teacher")
-    print("2. Student")
-    role = int(input("ENTER NUMBER: "))
-
-    if role == 1:
-        teacher_id = input("ENTER TEACHER_ID NOW (number only): ")
-        print_schedule(get_teacher_schedule(teacher_id), role)
-    elif role == 2:
-        get_student_options(role)
-
 
 def print_schedule(schedule, role):
     print()
@@ -63,19 +51,55 @@ def print_schedule(schedule, role):
             print("Teacher: " + desc[3] + "\n")
 
 
+def print_classes(schedule):
+    print()
+    count = 1
+    for desc in schedule:
+        print(str(count) + ". " + desc[1])
+        count += 1
+
+
+def calculate_class_grade(class_name, grades):
+    class_grades_major = []
+    class_grades_minor = []
+
+    for desc in grades:
+        if desc[1] == class_name:
+            if desc[4] == "Minor Assessment":
+                class_grades_minor.append(desc[3])
+            else:
+                class_grades_major.append(desc[3])
+
+    grades_major_avg = statistics.mean(class_grades_major)
+    grades_minor_avg = statistics.mean(class_grades_minor)
+
+    return grades_major_avg*0.7 + grades_minor_avg*0.3
+
+
 def get_student_options(role):
     student_id = input("ENTER STUDENT_ID NOW (number only): ")
-    print("1. SCHEUDLE. 2. GRADES")
-    option = input("OPTIONS:")
+    print("1. SCHEUDLE | 2. GRADES")
+
+    option = int(input("OPTIONS: "))
     if option == 1:
         print_schedule(get_student_schedule(student_id), role)
-    # elif option == 2:
-    #
+
+    elif option == 2:
+        schedule = get_student_schedule(student_id)
+        grades = get_student_grades(student_id)
+        print_classes(schedule)
+
+        class_num = input("CHOORSE CLASS (NUMER: ")
+        calculate_class_grade(schedule[1][class_num], grades)
 
 
-def calculate_class_grade():
-    print("hi")
-    #do stuff
+print("TEACHER OR STUDENT?")
+print("1. Teacher")
+print("2. Student")
+designation = int(input("ENTER NUMBER: "))
 
-
-get_schedule()
+if designation == 1:
+    teacher_id = input("ENTER TEACHER_ID NOW (number only): ")
+    print_schedule(get_teacher_schedule(teacher_id), designation)
+elif designation == 2:
+    get_student_options(designation)
