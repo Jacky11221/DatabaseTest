@@ -65,11 +65,16 @@ def calculate_class_grade(class_name, grades):
 
     for desc in grades:
         if desc[1] == class_name:
+            print(desc[1])
+            print(str(desc[3]))
+
             if desc[4] == "Minor Assessment":
                 class_grades_minor.append(desc[3])
             else:
                 class_grades_major.append(desc[3])
 
+    print(class_grades_minor)
+    print(class_grades_major)
     grades_major_avg = statistics.mean(class_grades_major)
     grades_minor_avg = statistics.mean(class_grades_minor)
 
@@ -78,19 +83,23 @@ def calculate_class_grade(class_name, grades):
 
 def get_student_options(role):
     student_id = input("ENTER STUDENT_ID NOW (number only): ")
-    print("1. SCHEUDLE | 2. GRADES")
+    print("1. SCHEDULE | 2. GRADES")
 
     option = int(input("OPTIONS: "))
+
     if option == 1:
         print_schedule(get_student_schedule(student_id), role)
 
     elif option == 2:
         schedule = get_student_schedule(student_id)
         grades = get_student_grades(student_id)
-        print_classes(schedule)
 
-        class_num = input("CHOORSE CLASS (NUMER: ")
-        calculate_class_grade(schedule[1][class_num], grades)
+        print_classes(schedule)
+        class_num = int(input("CHOOSE CLASS (NUMBER): ")) - 1
+        class_name = schedule[class_num][1]
+
+        grade = calculate_class_grade(class_name, grades)
+        print("Your grade in " + class_name + ": " + str(grade)[:5])
 
 
 print("TEACHER OR STUDENT?")
